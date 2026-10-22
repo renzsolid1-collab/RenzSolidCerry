@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a0b14">
+<title>RenzSolid Cerry</title>
+<style>
+:root{
+  --bg:#0a0b14;--surface:rgba(255,255,255,.05);--surface2:rgba(255,255,255,.08);
+  --line:rgba(255,255,255,.1);--ink:#f3f4fb;--mute:#9a9db8;
+  --a1:#7c5cff;--a2:#22d3ee;--ok:#34d399;--bad:#ff6b81;
+  --grad:linear-gradient(135deg,var(--a1),var(--a2));
+}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+html{background:var(--bg)}
+body{
+  color:var(--ink);font:15px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;min-height:100vh;
+  background:
+    radial-gradient(600px 400px at 85% -5%,rgba(124,92,255,.28),transparent 60%),
+    radial-gradient(500px 380px at -10% 20%,rgba(34,211,238,.16),transparent 60%),
+    var(--bg);
+  padding-top:env(safe-area-inset-top);
+}
+main{max-width:560px;margin:0 auto;padding:20px 16px calc(110px + env(safe-area-inset-bottom))}
+.ic{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+header{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+.logo{width:44px;height:44px;border-radius:14px;background:var(--grad);display:grid;place-items:center;box-shadow:0 8px 24px rgba(124,92,255,.4)}
+.logo .ic{width:24px;height:24px;color:#fff}
+h1{font-size:22px;font-weight:800;letter-spacing:-.4px;line-height:1.1}
+.sub{color:var(--mute);font-size:13px}
+
+section{display:none}
+section.on{display:block;animation:in .35s ease}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){section.on{animation:none}}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:16px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);margin-bottom:14px}
+.label{font-size:13px;font-weight:600;color:var(--mute);margin:2px 0 10px}
+
+/* upload */
+.drop{display:flex;flex-direction:column;align-items:center;gap:10px;padding:30px 16px;border-radius:18px;border:1.5px dashed rgba(255,255,255,.18);text-align:center;cursor:pointer;transition:.2s;background:rgba(255,255,255,.02)}
+.drop:hover,.drop:active{border-color:var(--a2);background:rgba(34,211,238,.06)}
+.drop .ico{width:54px;height:54px;border-radius:50%;background:var(--grad);display:grid;place-items:center;box-shadow:0 8px 22px rgba(124,92,255,.35)}
+.drop .ico .ic{width:26px;height:26px;color:#fff}
+.drop strong{font-size:16px}.drop span{color:var(--mute);font-size:13px;word-break:break-all}
+input[type=file]{display:none}
+
+/* level picker */
+.levels{display:grid;gap:8px}
+.lv{position:relative;display:flex;align-items:center;gap:14px;padding:13px 14px;border-radius:16px;border:1.5px solid var(--line);background:var(--surface);cursor:pointer;transition:.18s;text-align:left;color:inherit;font:inherit;width:100%}
+.lv:hover{background:var(--surface2)}
+.lv.on{border-color:transparent;background:linear-gradient(var(--bg),var(--bg)) padding-box,var(--grad) border-box;box-shadow:0 0 0 4px rgba(124,92,255,.15)}
+.meter{display:flex;align-items:flex-end;gap:2px;height:24px;width:40px;flex:none}
+.meter i{flex:1;border-radius:2px;background:rgba(255,255,255,.14)}
+.meter i:nth-child(1){height:22%}.meter i:nth-child(2){height:36%}.meter i:nth-child(3){height:50%}.meter i:nth-child(4){height:64%}.meter i:nth-child(5){height:78%}.meter i:nth-child(6){height:90%}.meter i:nth-child(7){height:100%}
+.lv.on .meter i.f{background:var(--grad)}
+.meter i.f{background:var(--mute)}
+.lv .t{flex:1;min-width:0}
+.lv strong{display:block;font-size:15px}
+.lv small{color:var(--mute);font-size:12.5px;display:block}
+.badge{font-size:12px;font-weight:800;padding:4px 10px;border-radius:99px;background:var(--surface2);color:var(--ink)}
+.lv.on .badge{background:var(--grad);color:#fff}
+
+/* buttons */
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:15px 20px;border:0;border-radius:16px;font:inherit;font-weight:700;font-size:15.5px;color:#fff;cursor:pointer;text-decoration:none;position:relative;overflow:hidden;transition:transform .12s,box-shadow .2s,filter .2s,opacity .2s}
+.btn.primary{background:var(--grad);box-shadow:0 10px 26px rgba(124,92,255,.38),inset 0 1px 0 rgba(255,255,255,.35)}
+.btn.primary:hover{filter:brightness(1.08);box-shadow:0 14px 32px rgba(124,92,255,.5),inset 0 1px 0 rgba(255,255,255,.35)}
+.btn.ghost{background:var(--surface2);border:1px solid var(--line);color:var(--ink)}
+.btn.ghost:hover{background:rgba(255,255,255,.13)}
+.btn:active{transform:scale(.97)}
+.btn:disabled{opacity:.35;pointer-events:none;box-shadow:none}
+.btn:focus-visible,.lv:focus-visible,.nav button:focus-visible{outline:2px solid var(--a2);outline-offset:2px}
+.btns{display:grid;gap:10px;margin-top:12px}
+
+/* output */
+.out{margin-top:14px}
+canvas,video,img.pv{max-width:100%;border-radius:16px;background:#000;display:block;margin:0 auto 12px;border:1px solid var(--line)}
+.msg{font-size:13.5px;color:var(--mute);margin:10px 2px}.msg.err{color:var(--bad)}.msg.ok{color:var(--ok)}
+.bar{height:8px;background:var(--surface2);border-radius:99px;overflow:hidden;margin-top:14px}
+.bar div{height:100%;width:0;background:var(--grad);border-radius:99px;transition:width .25s}
+
+/* inputs */
+.field{display:flex;align-items:center;gap:10px;padding:0 14px;border-radius:16px;border:1.5px solid var(--line);background:var(--surface);transition:.2s}
+.field:focus-within{border-color:var(--a2);box-shadow:0 0 0 4px rgba(34,211,238,.12)}
+.field .ic{color:var(--mute)}
+.field input{flex:1;min-width:0;border:0;background:none;color:var(--ink);font:inherit;padding:15px 0;outline:none}
+.field input::placeholder{color:#6c6f8c}
+details{margin-top:6px}
+summary{display:flex;align-items:center;gap:8px;cursor:pointer;color:var(--mute);font-size:13.5px;list-style:none;padding:6px 2px}
+summary::-webkit-details-marker{display:none}
+details .field{margin-top:8px}
+.note{color:var(--mute);font-size:12.5px;margin:8px 2px}
+
+/* bottom nav */
+.nav{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:center;padding:0 16px calc(14px + env(safe-area-inset-bottom));pointer-events:none}
+.nav .in{pointer-events:auto;display:flex;gap:4px;padding:6px;border-radius:22px;background:rgba(20,21,36,.82);border:1px solid var(--line);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 14px 40px rgba(0,0,0,.5);width:100%;max-width:420px}
+.nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 0;border:0;border-radius:16px;background:none;color:var(--mute);font:inherit;font-size:12px;font-weight:600;cursor:pointer;transition:.2s}
+.nav button.on{background:var(--grad);color:#fff;box-shadow:0 6px 18px rgba(124,92,255,.4)}
+
+/* akun */
+.prof{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.prof img{width:76px;height:76px;border-radius:50%;object-fit:cover;border:2px solid transparent;background:linear-gradient(var(--bg),var(--bg)) padding-box,var(--grad) border-box;flex:none}
+.prof h2{font-size:18px;line-height:1.2;word-break:break-word}
+.prof .un{color:var(--mute);font-size:13.5px}
+.chip{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 9px;border-radius:99px;background:var(--grad);color:#fff;margin-left:6px;vertical-align:middle}
+.chip.gr{background:var(--surface2);color:var(--ink)}
+.bio{color:#cfd1e6;font-size:14px;white-space:pre-wrap;word-break:break-word;margin-bottom:14px}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.stat{padding:12px 14px;border-radius:16px;background:var(--surface);border:1px solid var(--line)}
+.stat b{display:block;font-size:20px;letter-spacing:-.3px}
+.stat span{color:var(--mute);font-size:12.5px}
+.stat small{display:block;color:#6c6f8c;font-size:11.5px}
+.nav button{font-size:11.5px}
+
+.banner{height:96px;border-radius:16px;background-size:cover;background-position:center;filter:saturate(1.2);position:relative;overflow:hidden;background-color:var(--surface2)}
+.banner::after{content:"";position:absolute;inset:0;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);background:linear-gradient(180deg,rgba(10,11,20,.1),rgba(10,11,20,.55))}
+.who{display:flex;flex-direction:column;align-items:center;text-align:center;margin-top:-48px;position:relative;z-index:1}
+.who img{width:96px;height:96px;border-radius:50%;object-fit:cover;border:3px solid var(--bg);box-shadow:0 0 0 2px var(--a1),0 10px 26px rgba(0,0,0,.5);background:var(--surface2)}
+.who h2{font-size:20px;margin-top:10px;word-break:break-word}
+.who .un{color:var(--mute);font-size:14px;margin-bottom:16px}
+.stats3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stats3 .stat{text-align:center;padding:14px 6px}
+.stats3 .stat b{font-size:19px}
+
+.vgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.vt{position:relative;aspect-ratio:9/14;border:0;padding:0;border-radius:12px;overflow:hidden;background:var(--surface2);cursor:pointer;transition:transform .12s}
+.vt:active{transform:scale(.96)}
+.vt img{width:100%;height:100%;object-fit:cover;display:block;margin:0;border:0;border-radius:0}
+.vt .dur{position:absolute;top:6px;right:6px;font-size:11px;font-weight:700;padding:2px 7px;border-radius:99px;background:rgba(0,0,0,.6);color:#fff}
+.vt .pc{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;gap:4px;padding:16px 8px 6px;font-size:12px;font-weight:700;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.75))}
+.vt .pc .ic{width:13px;height:13px;fill:#fff;stroke:none}
+.modal{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(5,6,12,.95);overflow:auto}
+.modal[hidden]{display:none}
+.pbox{width:100%;max-width:420px}
+.pbox video{width:100%;max-height:66vh;margin-bottom:6px}
+
+.emb{width:100%;height:580px;border:1px solid var(--line);border-radius:16px;background:#000;display:block}
+.emb.one{height:520px}
+
+.seg{display:flex;gap:6px;padding:4px;border-radius:14px;background:var(--surface);border:1px solid var(--line)}
+.seg button{flex:1;padding:10px;border:0;border-radius:10px;background:none;color:var(--mute);font:inherit;font-weight:700;cursor:pointer;transition:.2s}
+.seg button.on{background:var(--grad);color:#fff;box-shadow:0 6px 16px rgba(124,92,255,.35)}
+.pr{display:flex;flex-direction:column;gap:12px;padding:14px;border-radius:20px;background:var(--surface);border:1px solid var(--line);margin-bottom:12px}
+.pr .top{display:flex;align-items:center;gap:12px}
+.pr .top img{width:48px;height:48px;border-radius:50%;object-fit:cover;margin:0;border:2px solid transparent;background:linear-gradient(var(--bg),var(--bg)) padding-box,var(--grad) border-box;flex:none}
+.pr .top b{display:block;line-height:1.2;word-break:break-word}.pr .top span{color:var(--mute);font-size:13px}
+.cap{color:#cfd1e6;font-size:13.5px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;word-break:break-word}
+.fm{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.fm div{padding:10px 12px;border-radius:14px;background:var(--surface2);border:1px solid var(--line)}
+.fm small{display:block;color:var(--mute);font-size:12px}
+.fm .v{font-weight:700;font-size:14.5px}
+.fm .v.no{color:#6c6f8c}
+.fm a{color:var(--a2);text-decoration:none}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.btn.sm{padding:11px 12px;font-size:14px;border-radius:13px}
+.nav button{font-size:11px}
+
+.tog{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.tog small{display:block;color:var(--mute);font-size:12.5px;line-height:1.4;margin-top:2px}
+.sw{position:relative;width:54px;height:30px;flex:none}
+.sw input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;z-index:1;cursor:pointer}
+.sw span{position:absolute;inset:0;border-radius:99px;background:var(--surface2);border:1px solid var(--line);transition:.2s}
+.sw span::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:.2s}
+.sw input:checked+span{background:var(--grad);border-color:transparent}
+.sw input:checked+span::after{transform:translateX(24px)}
+.sw input:focus-visible+span{outline:2px solid var(--a2);outline-offset:2px}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-logo" viewBox="0 0 24 24"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/><path d="m9 15 2.5-3.5 2 2.5 1.5-2 2 3z"/></symbol>
+  <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="m21 16-5-5-8 8"/></symbol>
+  <symbol id="i-video" viewBox="0 0 24 24"><rect x="3" y="5" width="13" height="14" rx="3"/><path d="m16 10 5-3v10l-5-3z"/></symbol>
+  <symbol id="i-tiktok" viewBox="0 0 24 24"><path d="M12 3v11.5a3.5 3.5 0 1 1-3.5-3.5"/><path d="M12 3c.4 2.6 2.2 4.4 5 4.6"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-6 8-6s8 2 8 6"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></symbol>
+  <symbol id="i-music" viewBox="0 0 24 24"><path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v12m0 0 4.5-4.5M12 16l-4.5-4.5M4 18v0a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2"/></symbol>
+  <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 3 5 13.5h6L10 21l8-10.5h-6z"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3A4 4 0 0 0 10 18.7l1-1"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M18.7 5.3l-2.1 2.1M7.4 16.6l-2.1 2.1"/></symbol>
+</svg>
+
+<main>
+<header>
+  <div class="logo"><svg class="ic"><use href="#i-logo"/></svg></div>
+  <div><h1>RenzSolid Cerry</h1><div class="sub">Tingkatkan kualitas foto dan video</div></div>
+</header>
+
+<!-- FOTO -->
+<section id="foto" class="on">
+  <div class="card">
+    <label class="drop">
+      <input type="file" id="fFoto" accept="image/*">
+      <div class="ico"><svg class="ic"><use href="#i-up"/></svg></div>
+      <strong>Pilih foto</strong><span id="nFoto">JPG, PNG, atau WEBP</span>
+    </label>
+  </div>
+  <div class="card"><div class="label">Tingkat kualitas</div><div class="levels lvl"></div></div>
+  <button class="btn primary" id="goFoto" disabled><svg class="ic"><use href="#i-bolt"/></svg>Proses foto</button>
+  <div class="out" id="outFoto"></div>
+</section>
+
+<!-- VIDEO -->
+<section id="video">
+  <div class="card">
+    <label class="drop">
+      <input type="file" id="fVid" accept="video/*">
+      <div class="ico"><svg class="ic"><use href="#i-up"/></svg></div>
+      <strong>Pilih video</strong><span id="nVid">MP4, WEBM, atau MOV</span>
+    </label>
+  </div>
+  <div class="card"><div class="label">Tingkat kualitas</div><div class="levels lvl"></div></div>
+  <div class="card tog">
+    <div><strong>Haluskan gerakan</strong><small>Video patah-patah jadi mulus (60 fps). Cocok untuk video 15 sampai 30 fps.</small></div>
+    <label class="sw"><input type="checkbox" id="smooth" checked><span></span></label>
+  </div>
+  <button class="btn primary" id="goVid" disabled><svg class="ic"><use href="#i-bolt"/></svg>Proses video</button>
+  <div class="bar"><div id="bar"></div></div>
+  <p class="msg" id="vmsg">Video diproses sesuai durasi aslinya. Biarkan layar tetap menyala.</p>
+  <div class="out" id="outVid"></div>
+</section>
+
+<!-- TIKTOK -->
+<section id="tiktok">
+  <div class="card">
+    <div class="label">Link video TikTok</div>
+    <div class="field"><svg class="ic"><use href="#i-link"/></svg><input type="text" id="tkUrl" placeholder="Tempel link di sini" inputmode="url" autocomplete="off"></div>
+    <div class="btns"><button class="btn primary" id="tkGo"><svg class="ic"><use href="#i-down"/></svg>Ambil video</button></div>
+    <details>
+      <summary><svg class="ic" style="width:16px;height:16px"><use href="#i-gear"/></svg>Pengaturan API</summary>
+      <div class="field"><input type="text" id="tkApi" value="https://www.tikwm.com/api/"></div>
+      <p class="note">Ganti alamat jika layanan ini berhenti bekerja. Unduh hanya video milik sendiri atau yang diizinkan pemiliknya.</p>
+    </details>
+  </div>
+  <p class="msg" id="tkMsg"></p>
+  <div class="out" id="tkOut"></div>
+</section>
+
+<!-- AKUN -->
+<section id="akun">
+  <div class="card">
+    <div class="label">Username TikTok</div>
+    <div class="field"><svg class="ic"><use href="#i-user"/></svg><input type="text" id="akUser" placeholder="contoh: tiktok" autocomplete="off" autocapitalize="none" spellcheck="false"></div>
+    <div class="btns"><button class="btn primary" id="akGo"><svg class="ic"><use href="#i-bolt"/></svg>Lihat info akun</button></div>
+    <p class="note">Hanya menampilkan data yang sudah terlihat publik di profil TikTok.</p>
+  </div>
+  <div class="bar" id="akBarW" style="display:none"><div id="akBar"></div></div>
+  <p class="msg" id="akMsg"></p>
+  <div class="out" id="akOut"></div>
+  <div class="out" id="akVids"></div>
+</section>
+
+<!-- PRESET -->
+<section id="preset">
+  <div class="card">
+    <div class="label">Lirik atau kata kunci</div>
+    <div class="field"><svg class="ic"><use href="#i-search"/></svg><input type="text" id="psQ" placeholder="Tulis potongan lirik lagu" autocomplete="off"></div>
+    <div class="label" style="margin-top:14px">Format preset</div>
+    <div class="seg" id="psFmt"><button class="on" data-f="all">Semua</button><button data-f="5mb">5MB</button><button data-f="xml">XML</button></div>
+    <div class="btns"><button class="btn primary" id="psGo"><svg class="ic"><use href="#i-search"/></svg>Cari preset AM</button></div>
+    <p class="note">Mencari video TikTok preset Alight Motion yang cocok dengan liriknya. Tautan dibaca dari caption video.</p>
+  </div>
+  <div class="bar" id="psBarW" style="display:none"><div id="psBar"></div></div>
+  <p class="msg" id="psMsg"></p>
+  <div class="out" id="psOut"></div>
+</section>
+</main>
+
+<div class="modal" id="pm" hidden><div class="pbox">
+  <video id="pv" controls playsinline autoplay loop></video>
+  <p class="msg" id="pt"></p>
+  <div class="btns"><button class="btn primary" id="pdl"><svg class="ic"><use href="#i-down"/></svg>Unduh video</button><button class="btn ghost" id="pcl">Tutup</button></div>
+</div></div>
+
+<nav class="nav"><div class="in">
+  <button class="on" data-t="foto"><svg class="ic"><use href="#i-image"/></svg>Foto</button>
+  <button data-t="video"><svg class="ic"><use href="#i-video"/></svg>Video</button>
+  <button data-t="tiktok"><svg class="ic"><use href="#i-tiktok"/></svg>TikTok</button>
+  <button data-t="akun"><svg class="ic"><use href="#i-user"/></svg>Akun</button>
+  <button data-t="preset"><svg class="ic"><use href="#i-music"/></svg>Preset</button>
+</div></nav>
+
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const ICO=n=>`<svg class="ic"><use href="#i-${n}"/></svg>`;
+
+/* Tingkat kualitas: tinggi sisi pendek (px) */
+const LEVELS=[
+  {id:'buruk',  name:'Buruk',    desc:'Piksel kasar ala 8-bit', h:144,  tag:'8-bit', bars:1, pixel:true},
+  {id:'normal', name:'Normal',   desc:'Ukuran asli, sedikit dipertajam', h:0, tag:'Asli', bars:2},
+  {id:'sedang', name:'Sedang',   desc:'Full HD', h:1080, tag:'1080p', bars:3},
+  {id:'hd',     name:'HD',       desc:'Quad HD', h:1440, tag:'2K', bars:4},
+  {id:'super',  name:'Super HD', desc:'Sangat besar, butuh RAM besar', h:4320, tag:'8K'
